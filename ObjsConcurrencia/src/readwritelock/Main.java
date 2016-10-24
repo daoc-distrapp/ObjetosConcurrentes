@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 public class Main {
 
     public static void main(String[] args) {
-        A a = new A();
-        for(int i = 1; i <= 200; i++) {
+        A a = new A(100);
+        for(int i = 1; i <= 101; i++) {
             new RWThread(i, a).start();
         }
         try {
@@ -35,7 +35,7 @@ class RWThread extends Thread {
 
     public RWThread(int i, A a) {
         cuenta = a;
-        value = (i % 2 == 0 ? 1 : -1);
+        value = -1;
     }
 
     @Override

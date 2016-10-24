@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class Main {
 
     public static void main(String[] args) {
-        A a = new A();
+        A a = new A(100);
         CountDownLatch latch = new CountDownLatch(200);
         for(int i = 1; i <= 200; i++) {
             new RWThread(i, a, latch).start();
@@ -39,7 +39,7 @@ class RWThread extends Thread {
 
     public RWThread(int i, A a, CountDownLatch latch) {
         cuenta = a;
-        value = (i % 2 == 0 ? 1 : -1);
+        value = -1;
         this.latch = latch;
     }
 

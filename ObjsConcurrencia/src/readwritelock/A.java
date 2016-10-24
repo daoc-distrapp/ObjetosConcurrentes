@@ -1,33 +1,44 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package readwritelock;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author diego
+ * @author dordonez
  */
 public class A {
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
-    private int a = 0;
+    private int a;
+    
+    public A(int a) {
+        this.a = a;
+    }
     
     public int addsub(int value) {
-        rwl.writeLock().lock();
         try {
-            a += value;
-            return a;
+            rwl.writeLock().lock();
+            if(value > 0) {
+                a += value;
+            } else {
+                int saldo = get();
+                Thread.sleep(1);
+                if(saldo + value >= 0) a += value;
+                return a;
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(A.class.getName()).log(Level.SEVERE, null, ex); 
         } finally {
             rwl.writeLock().unlock();
         }
+        return Integer.MIN_VALUE;
     }
     
     public int get() {
-        rwl.readLock().lock();
         try {
+            rwl.readLock().lock();
             return a;
         } finally {
             rwl.readLock().unlock();
